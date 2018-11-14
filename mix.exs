@@ -22,6 +22,7 @@ defmodule Objects.MixProject do
   def application do
     [
       extra_applications: applications(Mix.env),
+      mod: {Objects.Application, []}
     ]
   end
 
