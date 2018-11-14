@@ -1,12 +1,11 @@
 defmodule Objects.Application do
   @moduledoc false
 
+  alias Objects.Registry
+
   use Application
 
   def start(_type, _args) do
-    children = []
-
-    opts = [strategy: :one_for_one, name: Objects.Supervisor]
-    Supervisor.start_link(children, opts)
+    Registry.start_link()
   end
 end
