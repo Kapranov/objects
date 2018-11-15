@@ -34,4 +34,8 @@ defmodule Objects do
       Objects.class(unquote(class), unquote(block), final: true)
     end
   end
+
+  defmacro def(call, expr \\ nil) do
+    Builder.create_method(call, expr)
+  end
 end
