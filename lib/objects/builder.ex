@@ -6,4 +6,7 @@ defmodule Objects.Builder do
 
   def create_method(_call, _expr) do
   end
+
+  def create_var(_field, _opts) do
+  end
 end

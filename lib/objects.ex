@@ -38,4 +38,8 @@ defmodule Objects do
   defmacro def(call, expr \\ nil) do
     Builder.create_method(call, expr)
   end
+
+  defmacro var(field, opts \\ []) do
+    Builder.create_var(field, opts)
+  end
 end
