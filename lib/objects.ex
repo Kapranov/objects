@@ -42,4 +42,10 @@ defmodule Objects do
   defmacro var(field, opts \\ []) do
     Builder.create_var(field, opts)
   end
+
+  defmacro private_var(field) do
+    quote do
+      var(unquote(field), private: true)
+    end
+  end
 end
