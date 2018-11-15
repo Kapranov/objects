@@ -48,4 +48,10 @@ defmodule Objects do
       var(unquote(field), private: true)
     end
   end
+
+  defmacro friend(class) do
+    quote do
+      @friends unquote(class)
+    end
+  end
 end
