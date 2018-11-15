@@ -26,4 +26,12 @@ defmodule Objects do
       Objects.class(unquote(class), unquote(block), abstract: true)
     end
   end
+
+  defmacro final(class_expr, block) do
+    {:class, _, [class]} = class_expr
+
+    quote do
+      Objects.class(unquote(class), unquote(block), final: true)
+    end
+  end
 end
