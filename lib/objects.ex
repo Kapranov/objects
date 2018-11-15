@@ -18,4 +18,12 @@ defmodule Objects do
 
     Builder.create_class(class, superclasses, block, opts)
   end
+
+  defmacro abstract(class_expr, block) do
+    {:class, _, [class]} = class_expr
+
+    quote do
+      Objects.class(unquote(class), unquote(block), abstract: true)
+    end
+  end
 end
