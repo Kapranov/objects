@@ -6,7 +6,41 @@ defmodule Objects.Builder do
   def create_class(_class, _superclasses, _block, _opts) do
   end
 
-  def create_method(_call, _expr) do
+  def create_method(call, expr) do
+    using_this? = String.match?(Macro.to_string(expr), ~r"\bthis\.")
+
+    {method, args} = Macro.decompose_call(call)
+
+    handle_call_quoted =
+      quote do
+        try do
+          [do: value] = unquote(expr)
+          {:reply, {:ok, value}, data}
+        rescue
+          e in [RuntimeError] ->
+            {:reply, {:error, e}, data}
+        end
+      end
+
+    quote do
+      def unquote(call) do
+        case GenServer.call(__MODULE__, {:call, unquote(method), unquote(args)}) do
+          {:ok, value} -> value
+          {:error, e} -> raise e
+        end
+      end
+
+      if unquote(using_this?) do
+        def handle_call({:call, unquote(method), unquote(args)}, _from, data) do
+          var!(this) = data
+          unquote(handle_call_quoted)
+        end
+      else
+        def handle_call({:call, unquote(method), unquote(args)}, _from, data) do
+          unquote(handle_call_quoted)
+        end
+      end
+    end
   end
 
   def create_var(field, opts) do
