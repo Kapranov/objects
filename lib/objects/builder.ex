@@ -1,9 +1,30 @@
 defmodule Objects.Builder do
   @moduledoc false
 
+  alias Objects.Builder
   alias Objects.Registry
 
-  def create_class(_class, _superclasses, _block, _opts) do
+  def create_class(class, superclasses, _block, opts) do
+    quote do
+      defmodule unquote(class) do
+        Builder.ensure_can_be_subclassed(unquote(superclasses))
+
+        @final Keyword.get(unquote(opts), :final, false)
+
+        def __final__? do
+          @final
+        end
+
+        def new(data \\ [], descendant? \\ false) do
+          Builder.ensure_can_be_instantiated(unquote(class), descendant?, unquote(opts))
+
+          object = :"#{unquote(class)}#{:erlang.unique_integer()}"
+
+          defmodule object do
+          end
+        end
+      end
+    end
   end
 
   def create_method(call, expr) do
