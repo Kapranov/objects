@@ -21,6 +21,18 @@ defmodule Objects.Builder do
           object = :"#{unquote(class)}#{:erlang.unique_integer()}"
 
           defmodule object do
+            use GenServer
+
+            def start_link(data) do
+              GenServer.start_link(__MODULE__, data, name: __MODULE__)
+            end
+
+            def class do
+              unquote(class)
+            end
+
+            def methods do
+            end
           end
         end
       end
